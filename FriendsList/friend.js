@@ -7,6 +7,11 @@ $(document).ready(function() {
         $(`#friend-list`).append(newElement);
         $(`#input`).val(``);
         console.log(newFriend);
+    });
+
+    $(`#friend-list`).on(`click`, `li`, function(e) {
+        console.log('clicked')
+        $(this).remove();
     })
 
     function createFriend(name) {
