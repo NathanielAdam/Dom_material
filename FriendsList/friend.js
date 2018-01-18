@@ -1,12 +1,42 @@
 $(document).ready(function() {
 
+    $.ajax({
+        url:'http://rest.learncode.academy/api/grizmoore95/friends',
+        type:'GET'
+    }).done( (data) => {
+        data.forEach((eachFriend) => {
+            let name = eachFriend.firstName + " " + eachFriend.lastName;
+            let newElement = createFriend(name);
+            $(`#friend-list`).append(newElement);
+        });
+    }).fail( () => {
+        alert('AJAX call failed, unable to retrieve friends.');
+    })
+
+
+
     $("#friend-form").submit( (e) => {
         e.preventDefault();
         let newFriend = $(`#input`).val();
-        let newElement = createFriend(newFriend);
-        $(`#friend-list`).append(newElement);
-        $(`#input`).val(``);
-        console.log(newFriend);
+        
+        //split the name based on the first space we find
+        let firstName = newFriend.substr(0, newFriend.indexOf(' '));
+        let lastName = newFriend.substr(newFriend.indexOf(' ')+1);
+
+        //Construct the AJAX request
+        $.ajax({
+            url: 'http://rest.learncode.academy/api/grizmoore95/friends',
+            type: 'POST',
+            data: {
+                firstName: firstName,
+                lastName: lastName,
+                email: `${firstName}@${lastName}.com`
+            }
+        }).done( (data) => {
+            console.log(data);
+        }).fail( () => {
+            alert('AJAX call failed, unable to POST new friend');
+        })
     });
 
     $(`#friend-list`).on(`click`, `li`, function(e) {
